@@ -22,9 +22,6 @@ if (navigator.geolocation) {
 }
 
 const map = L.map("map").setView([0, 0], 10);
-map.on("move", () => {
-  userPanned = true;
-});
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "Rohan Makvana",
@@ -45,6 +42,10 @@ socket.on("receive-location", (data) => {
   } else {
     markers[id] = L.marker([latitude, longitude]).addTo(map);
   }
+});
+
+map.on("move", () => {
+  userPanned = true;
 });
 
 socket.on("user-disconnected", (id) => {
