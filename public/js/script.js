@@ -1,9 +1,16 @@
 const socket = io();
 
+let userPanned = false; // Flag to track if the user has panned the map manually
+
+// Function to handle map panning events
+map.on("move", () => {
+  userPanned = true;
+});
+
 if (navigator.geolocation) {
   navigator.geolocation.watchPosition(
-    (postion) => {
-      const { latitude, longitude } = postion.coords;
+    (position) => {
+      const { latitude, longitude } = position.coords;
       socket.emit("send-location", { latitude, longitude });
     },
     (error) => {
@@ -26,7 +33,12 @@ const markers = {};
 
 socket.on("receive-location", (data) => {
   const { id, latitude, longitude } = data;
-  map.setView([latitude, longitude], 16);
+
+  // Check if the user has panned the map manually
+  if (!userPanned) {
+    map.setView([latitude, longitude], 2);
+  }
+
   if (markers[id]) {
     markers[id].setLatLng([latitude, longitude]);
   } else {
