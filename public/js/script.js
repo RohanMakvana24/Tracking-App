@@ -3,9 +3,6 @@ const socket = io();
 let userPanned = false; // Flag to track if the user has panned the map manually
 
 // Function to handle map panning events
-map.on("move", () => {
-  userPanned = true;
-});
 
 if (navigator.geolocation) {
   navigator.geolocation.watchPosition(
@@ -25,6 +22,10 @@ if (navigator.geolocation) {
 }
 
 const map = L.map("map").setView([0, 0], 10);
+map.on("move", () => {
+  userPanned = true;
+});
+
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "Rohan Makvana",
 }).addTo(map);
